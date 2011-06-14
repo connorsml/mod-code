@@ -1,0 +1,4 @@
+[
+	{admin_code,        ["admin", "code"], resource_admin_code_manager, []},
+	{admin_code_editor, ["admin", "code", file], resource_admin_code_editor, []}
+].
