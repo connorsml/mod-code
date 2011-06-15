@@ -7,7 +7,8 @@
 		<div class="block clearfix">
 
 		<h2>{_ Files _}</h2>
-                <button>Create Template</button>&nbsp;<button>Create Stylesheet</button>&nbsp;<button>Create Script</button>&nbsp;<button>Upload Image</button>
+                <input type="text" name="filename" id="filename" style="float: left;" />
+                <button id="new-file" onclick="window.location='/admin/code/'+$('#filename').val();" >Edit File</button>
 		<hr class="clear" />
 		<h3 class="above-list ">{_ File overview _}</h3>
 		<ul class="short-list">
