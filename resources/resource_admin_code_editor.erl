@@ -37,26 +37,41 @@ html(Context) ->
             [_Name, Extension] = Tokens,
             case Extension of
                 "tpl" -> 
-                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])),
-                    Vars = [
-                        {type, "html"},
-                        {content, Content},
-                        {file_name, FileName}
-                    ];
+                    Vars = case file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])) of
+                        {ok, Content} -> 
+                                Result = [{type, "html"},
+                                {content, Content},
+                                {file_name, FileName}],
+                                Result;
+                        {error, _Reason} ->
+                                [{type, "html"},
+                                {content, ""},
+                                {file_name, FileName}]
+                    end;
                 "css" -> 
-                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName])),
-                    Vars = [
-                        {type, "css"},
-                        {content, Content},
-                        {file_name, FileName}
-                    ];
+                    Vars = case file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName])) of
+                        {ok, Content} -> 
+                                Result = [{type, "css"},
+                                {content, Content},
+                                {file_name, FileName}],
+                                Result;
+                        {error, _Reason} ->
+                                [{type, "css"},
+                                {content, ""},
+                                {file_name, FileName}]
+                    end;
                 "js" -> 
-                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])),
-                    Vars = [
-                        {type, "javascript"},
-                        {content, Content},
-                        {file_name, FileName}
-                    ];
+                    Vars = case file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])) of
+                        {ok, Content} -> 
+                                Result = [{type, "javascript"},
+                                {content, Content},
+                                {file_name, FileName}],
+                                Result;
+                        {error, _Reason} ->
+                                [{type, "javascript"},
+                                {content, ""},
+                                {file_name, FileName}]
+                    end;
                 _ -> 
                     Vars = [
                         {content, "undefined"},

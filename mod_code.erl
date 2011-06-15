@@ -28,30 +28,47 @@
 
 %% interface functions
 -export([
+    event/2,
     init/1,
     scan/1
 ]).
 
+event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
+    Host = Context#context.host,
+    Code = z_context:get_q("code", Context),
+    Tokens = string:tokens(FileName, "."),
+    case length(Tokens) of
+        2 ->
+            [_Name, Extension] = Tokens,
+            case Extension of
+                "tpl" -> 
+                    case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName]), Code) of
+                        ok -> z_render:growl("File Updated.", Context);
+                        {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
+                    end;
+                "css" -> 
+                    case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName]), Code) of
+                        ok -> z_render:growl("File Updated.", Context);
+                        {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
+                    end;
+                "js" -> 
+                    case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])) of
+                        ok -> z_render:growl("File Updated.", Context);
+                        {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
+                    end;
+                _ -> 
+                    z_render:growl_error("File missing extension.", Context)
+            end;
+        _ ->
+            z_render:growl_error("Unknown file type.", Context)
+    end.
 
 init(Context) ->
     z_datamodel:manage(?MODULE, datamodel(), Context).
 
 % support functions
 datamodel() ->
-    [{categories,
-      [
-       {code,
-        meta,
-        [{title, <<"Code">>}]},
-       {template,
-        code,
-        [{title, <<"Template">>}]},
-       {css,
-        code,
-        [{title, <<"Template">>}]}
-      ]
-     }
-    ].
+    [].
 
 scan(#context{host=Host}) ->
     Templates  = filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", "*.tpl"]),
