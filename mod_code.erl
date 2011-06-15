@@ -52,7 +52,7 @@ event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Cont
                         {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
                     end;
                 "js" -> 
-                    case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])) of
+                    case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName]), Code) of
                         ok -> z_render:growl("File Updated.", Context);
                         {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
                     end;
