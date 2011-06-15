@@ -7,7 +7,7 @@
 		<div class="block clearfix">
 
 		<h2>{_ Edit _} {{file_name}}</h2>
-			<div id="editor" style="position: relative; width: 800px; height: 400px;">{{content}}</div>
+			<div id="editor" style="position: relative; width: 800px; height: 400px;">{{content|escape}}</div>
                         <script src="/lib/ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
                         <script src="/lib/ace/src/theme-clouds.js" type="text/javascript" charset="utf-8"></script>
                         <script src="/lib/ace/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>

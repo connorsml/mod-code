@@ -37,28 +37,24 @@ html(Context) ->
             [_Name, Extension] = Tokens,
             case Extension of
                 "tpl" -> 
-                    {ok, Binary} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])),
-                    Lines = string:tokens(erlang:binary_to_list(Binary), "\n"),
+                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])),
                     Vars = [
                         {type, "html"},
-                        {content, Lines},
+                        {content, Content},
                         {file_name, FileName}
                     ];
                 "css" -> 
-                    {ok, Binary} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName])),
-                    {ok, Binary} = file:read_file(FileName),
-                    Lines = string:tokens(erlang:binary_to_list(Binary), "\n"),
+                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName])),
                     Vars = [
                         {type, "css"},
-                        {content, Lines},
+                        {content, Content},
                         {file_name, FileName}
                     ];
                 "js" -> 
-                    {ok, Binary} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])),
-                    Lines = string:tokens(erlang:binary_to_list(Binary), "\n"),
+                    {ok, Content} = file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName])),
                     Vars = [
                         {type, "javascript"},
-                        {content, Lines},
+                        {content, Content},
                         {file_name, FileName}
                     ];
                 _ -> 
