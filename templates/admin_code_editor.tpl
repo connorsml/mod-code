@@ -12,6 +12,7 @@
                         <script src="/lib/ace/src/theme-clouds.js" type="text/javascript" charset="utf-8"></script>
                         <script src="/lib/ace/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
                         <script src="/lib/ace/src/mode-html.js" type="text/javascript" charset="utf-8"></script>
+                        <script src="/lib/ace/src/mode-zotonic.js" type="text/javascript" charset="utf-8"></script>
                         <script src="/lib/ace/src/mode-css.js" type="text/javascript" charset="utf-8"></script>
                         <script>
                         window.onload = function() {
@@ -27,6 +28,6 @@
         {% wire id="save-form" type="submit" postback={save_file filename=file_name} delegate="mod_code" %}
         <form name="save-form" id="save-form" method="post" action="postback">
             <input type="hidden" name="code" id="code" value="" />
-            <button type="submit" onclick="$('#code').val(editor.getSession().getValue());">{_ Save _}</button>
+            <button type="submit" onclick="$('#code').val(editor.getSession().getValue());" class="zp-10">{_ Save _}</button>
         </form>
 {% endblock %}

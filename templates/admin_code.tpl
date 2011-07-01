@@ -16,7 +16,7 @@
 				<span class="zp-20">{_ Name _}</span>
 			</li>
 		{% for file in files %}
-                    <li><a href="/admin/code/{{file}}">{{file}}</a>&nbsp;<button style="float: right;">Edit</button></li>
+                    <li><a href="/admin/code/{{file}}">{{file}}</a>&nbsp;<button style="float: right;" onclick="window.location='/admin/code/{{file}}';">Edit</button></li>
 		{% empty %}
 			<li>{_ No code files found _}</li>
 		{% endfor %}

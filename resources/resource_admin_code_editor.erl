@@ -32,6 +32,13 @@ html(Context) ->
     Host = Context#context.host,
     FileName = z_context:get_q("file", Context),
     Tokens = string:tokens(FileName, "."),
+    %Command = io_lib:format("cd ~s;hg st", [filename:join([z_utils:lib_dir(priv), "sites", Host])]),
+    %HG = os:cmd(Command),
+    %Git = os:cmd("git status"),
+    %Fake = os:cmd("fake status"),
+    %io:format("HG:~p~n", [HG]),
+    %io:format("Git:~p~n", [Git]),
+    %io:format("Fake:~p~n", [Fake]),
     case length(Tokens) of
         2 ->
             [_Name, Extension] = Tokens,
@@ -39,12 +46,12 @@ html(Context) ->
                 "tpl" -> 
                     Vars = case file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])) of
                         {ok, Content} -> 
-                                Result = [{type, "html"},
+                                Result = [{type, "zotonic"},
                                 {content, Content},
                                 {file_name, FileName}],
                                 Result;
                         {error, _Reason} ->
-                                [{type, "html"},
+                                [{type, "zotonic"},
                                 {content, ""},
                                 {file_name, FileName}]
                     end;
