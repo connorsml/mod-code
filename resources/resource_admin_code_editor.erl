@@ -39,9 +39,9 @@ html(Context) ->
     %io:format("HG:~p~n", [HG]),
     %io:format("Git:~p~n", [Git]),
     %io:format("Fake:~p~n", [Fake]),
-    case length(Tokens) of
-        2 ->
-            [_Name, Extension] = Tokens,
+    case length(Tokens) >= 2 of
+        true ->
+            Extension = lists:last(Tokens),
             case Extension of
                 "tpl" -> 
                     Vars = case file:read_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName])) of

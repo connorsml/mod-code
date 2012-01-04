@@ -30,6 +30,7 @@ file_type(Input, Context) when is_atom(Input) ->
 file_type(Input, _Context) when is_list(Input) ->
     case string:tokens(Input, ".") of 
         [] -> undefined;
+        [_OneToken] -> undefined;
         Tokens when is_list(Tokens) -> 
             case lists:last(Tokens) of
                 "tpl" -> <<"Template">>;

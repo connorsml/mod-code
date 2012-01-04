@@ -39,9 +39,9 @@ event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Cont
             Host = Context#context.host,
             Code = z_context:get_q("code", Context),
             Tokens = string:tokens(FileName, "."),
-            case length(Tokens) of
-                2 ->
-                    [_Name, Extension] = Tokens,
+            case length(Tokens) >=2 of
+                true ->
+                    Extension = lists:last(Tokens),
                     case Extension of
                         "tpl" -> 
                             case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName]), Code) of
