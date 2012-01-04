@@ -33,8 +33,11 @@
     scan/1
 ]).
 
+event({submit, {delete_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
+    undefined;
 event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
-    case z_acl:is_admin(Context) of
+    %case z_acl:is_admin(Context) of
+     case z_acl:is_allowed(use, mod_code, Context) of
         true ->
             Host = Context#context.host,
             Code = z_context:get_q("code", Context),
