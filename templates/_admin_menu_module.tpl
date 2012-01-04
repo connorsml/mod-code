@@ -1,3 +1,3 @@
 {% if m.acl.is_admin %}
-<li><a href="{% url admin_code %}" {% ifequal selected "code" %}class="current"{% endifequal %}>{_ Code _}</a></li>
+<li><a href="{% url admin_code %}" {% if admin_code_active %}class="current"{% endif %}>{_ Code Manager _}</a></li>
 {% endif %}

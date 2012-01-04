@@ -30,7 +30,8 @@ is_authorized(ReqData, Context) ->
 
 html(Context) ->
     Vars = [
-        {files, mod_code:scan(Context)}
+        {files, mod_code:scan(Context)},
+        {admin_code_active, true}
     ],
     Template = z_context:get(template, Context, "admin_code.tpl"),
 	Html = z_template:render(Template, Vars, Context),
