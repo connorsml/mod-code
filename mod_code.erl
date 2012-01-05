@@ -33,10 +33,12 @@
     scan/1
 ]).
 
-event({submit, {delete_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
-    undefined;
-event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
-    %case z_acl:is_admin(Context) of
+%execute function F on a file if user has permission and the file name is valid
+change_file(FileName, Context, F) when is_atom(FileName)->
+    change_file(atom_to_list(FileName), Context, F);
+change_file(FileName, Context, F) when is_binary(FileName)->
+    change_file(binary_to_list(FileName), Context, F);
+change_file(FileName, Context, F) ->
      case z_acl:is_allowed(use, mod_code, Context) of
         true ->
             Host = Context#context.host,
@@ -47,28 +49,39 @@ event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Cont
                     Extension = lists:last(Tokens),
                     case Extension of
                         "tpl" -> 
-                            case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName]), Code) of
-                                ok -> z_render:growl("File Updated.", Context);
-                                {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
-                            end;
-                        "css" -> 
-                            case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName]), Code) of
-                                ok -> z_render:growl("File Updated.", Context);
-                                {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
-                            end;
+                            FullFileName = filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", FileName]),
+                            F(FullFileName, Code, Context);
+                        "css" ->
+                            FullFileName = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", FileName]),
+                            F(FullFileName, Code, Context);
                         "js" -> 
-                            case file:write_file(filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName]), Code) of
-                                ok -> z_render:growl("File Updated.", Context);
-                                {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
-                            end;
+                            FullFileName = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", FileName]),
+                            F(FullFileName, Code, Context);
                         _ -> 
-                            z_render:growl_error("File missing extension.", Context)
+                            z_render:growl_error("Probably determining file type!", Context)
                     end;
                 _ ->
                     z_render:growl_error("Unknown file type.", Context)
             end;
 	_ -> z_render:growl_error("You are not allowed to do that.", Context)
    end.
+
+event({submit, {delete_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
+    F = fun(FullFileName, _Code, Context) ->
+        case file:delete(FullFileName) of
+            ok -> z_render:growl("File Deleted.", Context);
+            {error, _Reason} -> z_render:growl_error("Could not delete file.", Context)
+        end
+    end,
+    change_file(FileName, Context, F);
+event({submit, {save_file, [{filename, FileName}]}, _TriggerId, _TargetId}, Context) ->
+    F = fun(FullFileName, Code, Context) ->
+        case file:write_file(FullFileName, Code) of
+            ok -> z_render:growl("File Updated.", Context);
+            {error, _Reason} -> z_render:growl_error("Could not save file.", Context)
+        end
+    end,
+    change_file(FileName, Context, F).
 
 init(Context) ->
     z_datamodel:manage(?MODULE, datamodel(), Context).

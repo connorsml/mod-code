@@ -45,9 +45,16 @@
 		            				{% if file %}
 		            					{% button text=_"Edit File" 
 		            							action={redirect location="/admin/code/"|append:file} %}
-		            				{% else %}
-		            					{% button text=_"View File"
-		            							action={redirect location="/"} %}
+		            				{% endif %}
+		            				{% if file %}
+                                                            {% wire id="delete-form-"|append:forloop.counter type="submit" postback={delete_file filename=file} delegate="mod_code" %}
+		            					{% button text=_"Delete File" 
+		            							action={confirm text="Are you sure you want to do that??" action={submit closest="delete-form-"|append:forloop.counter}} %}
+                                                            <form name="delete-form-{{forloop.counter}}" id="delete-form-{{forloop.counter}}" method="post" action="postback">
+                                                                <input type="hidden" name="code" id="code" value="" />
+
+                                                            </form>
+
 		            				{% endif %}
                             </span>
 		    
