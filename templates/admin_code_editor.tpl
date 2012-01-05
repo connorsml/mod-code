@@ -35,6 +35,12 @@
                             <input type="hidden" name="code" id="code" value="" />
                             <button type="submit" onclick="$('#code').val(editor.getSession().getValue());" class="zp-10">{_ Save _}</button>
                         </form>
+                        {#{% wire id="save-form-close" type="submit" postback={save_file filename=file_name } action={redirect dispatch="admin_code"} delegate="mod_code" %}
+                        <form name="save-form-close" id="save-form-close" method="post" action="postback">
+                            <input type="hidden" name="code1" id="code1" value="" />
+                            <button type="submit" onclick="$('#code1').val(editor.getSession().getValue());" class="zp-10">{_ Save & Close _}</button>
+                        </form>#}
+		        {% button text=_"Go Back" action={confirm text="Are you sure you want to leave this page? " action={redirect dispatch="admin_code"}} %}
                     </div>
 		</div>
 
