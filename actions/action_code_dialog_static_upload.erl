@@ -1,0 +1,56 @@
+%% @author Michael Connors <michael@bring42.net>
+%% @copyright 2012 Michael Connors
+%% @doc Overview of templates, scripts and css files
+
+%% Copyright 2012 Michael Connors
+%%
+%% Licensed under the Apache License, Version 2.0 (the "License");
+%% you may not use this file except in compliance with the License.
+%% You may obtain a copy of the License at
+%% 
+%%     http://www.apache.org/licenses/LICENSE-2.0
+%% 
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS,
+%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+%% See the License for the specific language governing permissions and
+%% limitations under the License.
+-module(action_code_dialog_static_upload).
+-author("Michael Connors <michael@bring42.net>").
+
+%% interface functions
+-export([
+    render_action/4,
+    event/2
+]).
+
+-include("zotonic.hrl").
+
+render_action(TriggerId, TargetId, _Args, Context) ->
+    Postback = {static_upload_dialog},
+	{PostbackMsgJS, _PickledPostback} = z_render:make_postback(Postback, click, TriggerId, TargetId, ?MODULE, Context),
+	{PostbackMsgJS, Context}.
+
+event({postback, {static_upload_dialog}, _TriggerId, _TargetId}, Context) ->
+    Vars = [
+        {delegate, atom_to_list(?MODULE)}
+    ],
+    z_render:dialog("Upload a Static File", "_action_dialog_static_upload.tpl", Vars, Context);
+
+event({submit, {static_upload, _EventProps}, _TriggerId, _TargetId}, Context) ->
+    File = z_context:get_q_validated("upload_file", Context),
+    ContextUpload = case File of
+                        #upload{filename=_OriginalFilename, tmpfile=TmpFile} ->
+                            %%io:format("TmpFile: ~p~n", [TmpFile]),
+                            %% Check permissions
+                            %% check that it is an allowed filetype
+                            %% check that the file does not exist
+                            %% copy file from tmp to static directory, or report error
+                            z_render:growl("File Uploaded!", Context);
+                        _ ->
+                            z_render:growl("No file specified.", Context)
+                    end,
+    %% Close the dialog and optionally perform the post upload actions
+    z_render:wire({dialog_close, []}, ContextUpload).
+
+
