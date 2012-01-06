@@ -1,6 +1,6 @@
 %% @author Michael Connors <michael@bring42.net>
 %% @copyright 2012 Michael Connors
-%% @doc Overview of templates, scripts and css files
+%% @doc Action to upload a file to one of the static directories
 
 %% Copyright 2012 Michael Connors
 %%
@@ -42,7 +42,7 @@ event({submit, {static_upload, _EventProps}, _TriggerId, _TargetId}, Context) ->
     ContextUpload = case File of
                         #upload{filename=_OriginalFilename, tmpfile=TmpFile} ->
                             %%io:format("TmpFile: ~p~n", [TmpFile]),
-                            %% Check permissions
+                            %% Check permissions: case z_acl:is_allowed(use, mod_code, Context) of
                             %% check that it is an allowed filetype
                             %% check that the file does not exist
                             %% copy file from tmp to static directory, or report error

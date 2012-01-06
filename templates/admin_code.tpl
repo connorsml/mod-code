@@ -26,6 +26,12 @@
                                              {% validate id="filename" type={format pattern="^[a-z_]+([a-z0-9-]+.)+(?:[A-Z]{2}|tpl|css|js)$"failure_message="Type a valid filename which ends in .tpl, .css or .js"}  %}
                                              <button id="new-file" onclick="window.location='/admin/code/'+$('#filename').val();" >{_ Create/Edit File _}</button>
                              	</div>
+
+
+                             	<div class="form-item clearfix">
+                                    {% button class="" text=_"Upload a Static File" action={dialog_static_upload} %}
+                             	</div>
+
                              </fieldset>
                          </div>
                      </div>
