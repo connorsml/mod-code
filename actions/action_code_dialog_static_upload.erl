@@ -38,15 +38,19 @@ event({postback, {static_upload_dialog}, _TriggerId, _TargetId}, Context) ->
     z_render:dialog("Upload a Static File", "_action_dialog_static_upload.tpl", Vars, Context);
 
 event({submit, {static_upload, _EventProps}, _TriggerId, _TargetId}, Context) ->
+    Host = Context#context.host,
     File = z_context:get_q_validated("upload_file", Context),
     ContextUpload = case File of
-                        #upload{filename=_OriginalFilename, tmpfile=TmpFile} ->
-                            %%io:format("TmpFile: ~p~n", [TmpFile]),
-                            %% Check permissions: case z_acl:is_allowed(use, mod_code, Context) of
-                            %% check that it is an allowed filetype
-                            %% check that the file does not exist
-                            %% copy file from tmp to static directory, or report error
-                            z_render:growl("File Uploaded!", Context);
+                        #upload{filename=OriginalFilename, tmpfile=TmpFile} ->
+                            To = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", OriginalFilename]),
+                            case z_acl:is_allowed(use, mod_code, Context) of
+                                true ->
+                                    file:copy(TmpFile, To),
+                                    z_render:growl("File Uploaded!", Context);
+                                false ->
+                                    z_render:growl_error("You don't have permission to do that!")
+                            end;
+
                         _ ->
                             z_render:growl("No file specified.", Context)
                     end,
