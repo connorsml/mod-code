@@ -12,7 +12,7 @@
                     <div class="form-item clearfix">
                         <label for="new_media_title" style="color:white">{_ Name on Server _}</label>
                         <input type="text" id="file_name" name="file_name" value="{{ file_name|escape }}" />
-                        {% validate id="file_name" type={presence} type={format pattern="^[a-z_]+([a-z0-9-]+.)+(?:[A-Z]{2}|tpl|css|js|gif|png|jpg|jpeg)$"failure_message="Type a valid filename which ends in .tpl, .css or .js or gif, png or jpg"}  %}
+                        {% validate id="file_name" type={presence} type={format pattern="^[a-z_]+([a-z0-9-]+.)+" failure_message="Type the name for this file on the server (No extension)"}  %}
                     </div>
                 {% endif %}
                 <div class="form-item clearfix">

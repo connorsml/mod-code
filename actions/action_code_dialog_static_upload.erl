@@ -40,17 +40,23 @@ event({postback, {static_upload_dialog}, _TriggerId, _TargetId}, Context) ->
 event({submit, {static_upload, _EventProps}, _TriggerId, _TargetId}, Context) ->
     Host = Context#context.host,
     File = z_context:get_q_validated("upload_file", Context),
+    FileName = z_context:get_q_validated("file_name", Context),
     ContextUpload = case File of
                         #upload{filename=OriginalFilename, tmpfile=TmpFile} ->
-                            To = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", OriginalFilename]),
+                            Extension = filename:extension(OriginalFilename),
+                            To = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", FileName++Extension]),
                             case z_acl:is_allowed(use, mod_code, Context) of
                                 true ->
-                                    file:copy(TmpFile, To),
-                                    z_render:growl("File Uploaded!", Context);
+                                    case lists:member(Extension, [".png", ".gif", ".jpg", ".jpeg", ".tpl", ".css", ".js"]) of
+                                        true -> 
+                                            file:copy(TmpFile, To),
+                                            z_render:growl("File Uploaded!", Context);
+                                        false ->
+                                            z_render:growl_error("You don't have permission to upload that file type!", Context)
+                                    end;
                                 false ->
-                                    z_render:growl_error("You don't have permission to do that!")
+                                    z_render:growl_error("You don't have permission to do that!", Context)
                             end;
-
                         _ ->
                             z_render:growl("No file specified.", Context)
                     end,

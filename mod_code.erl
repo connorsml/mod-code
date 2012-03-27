@@ -94,5 +94,9 @@ scan(#context{host=Host}) ->
     Templates  = filename:join([z_utils:lib_dir(priv), "sites", Host, "templates", "*.tpl"]),
     CSS  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "css", "*.css"]),
     Scripts  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "js", "*.js"]),
-    Files = filelib:wildcard(Templates) ++ filelib:wildcard(CSS) ++ filelib:wildcard(Scripts),
+    PNGs  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", "*.png"]),
+    GIFs  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", "*.gif"]),
+    JPGs  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", "*.jpg"]),
+    JPEGs  = filename:join([z_utils:lib_dir(priv), "sites", Host, "lib", "images", "*.jpeg"]),
+    Files = filelib:wildcard(Templates) ++ filelib:wildcard(CSS) ++ filelib:wildcard(Scripts) ++ filelib:wildcard(PNGs) ++ filelib:wildcard(GIFs) ++ filelib:wildcard(JPGs) ++ filelib:wildcard(JPEGs),
     [ z_convert:to_atom(filename:basename(F)) ||  F <- Files ].

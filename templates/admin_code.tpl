@@ -49,8 +49,15 @@
                             <span class="zp-60">{{file}}</span></a>
                             <span class="button-area">
 		            				{% if file %}
-		            					{% button text=_"Edit File" 
+                                                                {% ifnotequal file|file_type|default:"Image" "Image" %}
+		            					    {% button text=_"Edit File" 
 		            							action={redirect location="/admin/code/"|append:file} %}
+                                                                {% else %}
+                                                                    {% ifequal file|file_type|default:"Unknown" "Image" %}
+                                                                        {% button text=_"View File" 
+		            							action={redirect location="/lib/images/"|append:file} %}
+                                                                    {% endifequal %}
+                                                                {% endifnotequal%}
 		            				{% endif %}
 		            				{% if file %}
                                                             {% wire id="delete-form-"|append:forloop.counter type="submit" postback={delete_file filename=file} delegate="mod_code" %}

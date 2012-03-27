@@ -36,6 +36,10 @@ file_type(Input, _Context) when is_list(Input) ->
                 "tpl" -> <<"Template">>;
                 "js" -> <<"JavaScript">>;
                 "css" -> <<"CSS">>;
+                "gif" -> <<"Image">>;
+                "png" -> <<"Image">>;
+                "jpg" -> <<"Image">>;
+                "jpeg" -> <<"Image">>;
                 _Other -> <<"Unknown">>
             end;
         _Other -> 
